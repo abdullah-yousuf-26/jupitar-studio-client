@@ -1,11 +1,8 @@
-import { ThemeSwitch } from "@/components/site-theme";
+
 
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-6 py-6 sm:px-12 lg:px-20">
-      <div className="flex justify-end">
-        <ThemeSwitch />
-      </div>
 
       <section className="flex flex-1 flex-col items-start justify-center py-16">
         <p className="mb-5 text-sm font-semibold tracking-[0.2em] text-[var(--accent)]">
