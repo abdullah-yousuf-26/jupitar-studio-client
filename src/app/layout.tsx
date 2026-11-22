@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import "@fontsource/barlow-condensed/800.css";
+import "@fontsource/dm-sans/400.css";
+import "@fontsource/dm-sans/600.css";
 import "./globals.css";
+
+import { SiteThemeProvider } from "@/components/site-theme";
 
 export const metadata: Metadata = {
   title: "JUPITAR STUDIO | Creative Studio Rentals",
@@ -10,8 +15,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <SiteThemeProvider>{children}</SiteThemeProvider>
+      </body>
     </html>
   );
 }

@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --page: #191919;
+  --text: #f5edcf;
+  --muted: #d0c8b5;
+  --accent: #ff6845;
+  --border: #766f61;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f5edcf;
+  --text: #191919;
+  --muted: #504a40;
+  --accent: #aa3218;
+  --border: #817662;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page);
+  color: var(--text);
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.studio-heading {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 800;
+}
+
+.theme-switch {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.theme-switch:hover {
+  border-color: var(--accent);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.show-in-light,
+:root[data-theme="light"] .show-in-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .show-in-light {
+  display: inline;
 }
