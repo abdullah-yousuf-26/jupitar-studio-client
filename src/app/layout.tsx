@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { SiteThemeProvider } from "@/components/site-theme";
+import SiteFooter from "@/components/site-footer";
 import SiteNavbar from "@/components/site-navbar";
 import "@fontsource/barlow-condensed/800.css";
 import "@fontsource/dm-sans/400.css";
@@ -20,9 +21,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <SiteThemeProvider>
-        <SiteNavbar />
-        {children}
-      </SiteThemeProvider>
+          <SiteNavbar />
+          {children}
+          <SiteFooter />
+        </SiteThemeProvider>
+
       </body>
     </html>
   );
