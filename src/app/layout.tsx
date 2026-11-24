@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+
 import { SiteThemeProvider } from "@/components/site-theme";
-import SiteFooter from "@/components/site-footer";
 import SiteNavbar from "@/components/site-navbar";
+import SiteFooter from "@/components/site-footer";
+
 import "@fontsource/barlow-condensed/800.css";
 import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/600.css";
 import "./globals.css";
-
-
 
 export const metadata: Metadata = {
   title: "JUPITAR STUDIO | Creative Studio Rentals",
@@ -21,11 +21,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <SiteThemeProvider>
-          <SiteNavbar />
+          <Suspense
+            fallback={
+              <div
+                aria-hidden="true"
+                className="h-16 border-b border-[var(--border)] bg-[var(--page)]"
+              />
+            }
+          >
+            <SiteNavbar />
+          </Suspense>
+
           {children}
+
           <SiteFooter />
         </SiteThemeProvider>
-
       </body>
     </html>
   );
