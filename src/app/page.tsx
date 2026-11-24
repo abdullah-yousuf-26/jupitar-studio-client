@@ -1,25 +1,27 @@
-
+import { Suspense } from "react";
+import HeroSlider from "@/components/hero-slider";
+import FeaturedStudios from "@/components/featured-studios";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-6 py-6 sm:px-12 lg:px-20">
+    <main>
+      <h1 className="sr-only">JUPITAR STUDIO — Creative Studio Rentals</h1>
 
-      <section className="flex flex-1 flex-col items-start justify-center py-16">
-        <p className="mb-5 text-sm font-semibold tracking-[0.2em] text-[var(--accent)]">
-          CREATIVE STUDIO RENTALS
-        </p>
-
-        <h1 className="studio-heading text-7xl leading-[0.85] sm:text-9xl lg:text-[10rem]">
-          JUPITAR
-          <br />
-          STUDIO
-        </h1>
-
-        <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--muted)]">
-          Find a space for your next photo shoot, podcast, or recording session.
-          Book a creative studio by the hour.
-        </p>
-      </section>
+      <Suspense
+        fallback={
+          <div
+            role="status"
+            className="mx-auto flex min-h-[28rem] w-full max-w-7xl items-center justify-center px-4 py-8"
+          >
+            <p className="text-sm text-[var(--muted)]">
+              Loading studio slides…
+            </p>
+          </div>
+        }
+      >
+        <HeroSlider />
+      </Suspense>
+      <FeaturedStudios />
     </main>
   );
 }
