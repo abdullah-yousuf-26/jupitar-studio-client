@@ -95,7 +95,7 @@ export default function SiteFooter() {
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border)] pt-5">
           <p className="text-sm text-[var(--muted)]">
-            © {new Date().getFullYear()} JUPITAR STUDIO. All rights reserved.
+           © 2026 JUPITAR STUDIO. All rights reserved.
           </p>
 
           <div className="flex flex-wrap items-center gap-5">
