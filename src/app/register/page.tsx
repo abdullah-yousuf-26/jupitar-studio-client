@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import GoogleSignInButton from "@/components/google-sign-in-button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { Toaster, toast } from "sonner";
@@ -193,6 +194,8 @@ export default function RegisterPage() {
               : "Register"}
         </button>
 
+        <GoogleSignInButton mode="register" />
+        
         <p className="text-center text-sm text-[var(--muted)]">
           Already have an account?{" "}
           <Link

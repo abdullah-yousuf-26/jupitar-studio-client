@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import GoogleSignInButton from "@/components/google-sign-in-button";
 import { useEffect, useState, type FormEvent } from "react";
 import { Toaster, toast } from "sonner";
 
@@ -119,6 +120,8 @@ export default function LoginPage() {
           {destination ? "Signed in…" : submitting ? "Signing in…" : "Log in"}
         </button>
 
+        <GoogleSignInButton mode="login" />
+        
         <p className="text-center text-sm text-[var(--muted)]">
           New to JUPITAR STUDIO?{" "}
           <Link
