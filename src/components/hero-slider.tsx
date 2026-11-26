@@ -132,12 +132,21 @@ export default function HeroSlider() {
                   {slide.description}
                 </p>
 
+                <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link
                   href="/studios"
-                  className="mt-7 rounded-full bg-[#ff6845] px-6 py-3 font-semibold text-[#191919] hover:underline"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff6845] px-6 py-3 font-semibold text-[#191919] hover:underline"
                 >
                   Explore Studios
                 </Link>
+
+                <Link
+                  href="/studios"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-current px-6 py-3 font-semibold hover:underline"
+                >
+                  Host Your Space
+                </Link>
+              </div>
               </div>
             </div>
           </SwiperSlide>

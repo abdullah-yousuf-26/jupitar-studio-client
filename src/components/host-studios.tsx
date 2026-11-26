@@ -1,5 +1,5 @@
 "use client";
-
+import AmenitiesField from "./amenities-field";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
@@ -97,9 +97,7 @@ function AddStudioForm({ host }: { host: Host }) {
         maxCapacity: Number(data.get("maxCapacity")),
         location: String(data.get("location")).trim(),
         overview: String(data.get("overview")).trim(),
-        amenities: [...new Set(
-          String(data.get("amenities")).split(",").map((item) => item.trim()).filter(Boolean),
-        )],
+        amenities: data.getAll("amenities").map(String),
         imageUrl: uploaded,
       };
 
@@ -174,10 +172,7 @@ function AddStudioForm({ host }: { host: Host }) {
           </label>
         )}
 
-        <label className="sm:col-span-2">
-          Amenities (separate with commas)
-          <input name="amenities" placeholder="Softboxes, changing room, Wi-Fi" className={control} />
-        </label>
+        <AmenitiesField />
 
         <label className="sm:col-span-2">
           Detailed overview

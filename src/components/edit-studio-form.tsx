@@ -1,5 +1,5 @@
 "use client";
-
+import AmenitiesField from "./amenities-field";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -102,10 +102,7 @@ export default function EditStudioForm({ id }: { id: string }) {
           maxCapacity: Number(form.get("maxCapacity")),
           location: form.get("location"),
           overview: form.get("overview"),
-          amenities: String(form.get("amenities"))
-            .split(",")
-            .map(item => item.trim())
-            .filter(Boolean),
+          amenities: form.getAll("amenities").map(String),
           imageUrl,
         }),
       });
@@ -169,9 +166,7 @@ export default function EditStudioForm({ id }: { id: string }) {
           <input className={field} name="location" defaultValue={studio.location} maxLength={250} required />
         </label>
 
-        <label className="sm:col-span-2">Amenities, separated by commas
-          <input className={field} name="amenities" defaultValue={studio.amenities.join(", ")} />
-        </label>
+        <AmenitiesField initialValues={studio.amenities} />
 
         <label className="sm:col-span-2">Overview
           <textarea className={field} name="overview" defaultValue={studio.overview}
