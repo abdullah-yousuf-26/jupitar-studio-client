@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import BookWorkspaceButton from "@/components/book-workspace-button";
 
 export const metadata: Metadata = {
   title: "Studio Details | JUPITAR STUDIO",
@@ -173,6 +174,10 @@ async function StudioDetails({ params }: StudioPageProps) {
               <dd className="mt-1 font-semibold">{studio.ownerName}</dd>
             </div>
           </dl>
+                    <BookWorkspaceButton
+            studioId={studio._id}
+            hourlyRate={studio.hourlyRate}
+          />
         </aside>
       </div>
     </article>
