@@ -235,9 +235,9 @@ export default function SiteNavbar() {
               )}
             </span>
 
-            <span className="studio-heading hidden whitespace-nowrap text-xl min-[390px]:inline sm:text-2xl">
-              JUPITAR STUDIO
-            </span>
+            <span className="studio-heading hidden whitespace-nowrap text-xl min-[390px]:inline sm:text-2xl text-[var(--accent)]">
+            JUPITAR STUDIO
+          </span>
           </Link>
 
           {/* Center: equal-width outer columns keep these links centered */}
