@@ -42,6 +42,7 @@ export default function SiteNavbar() {
   const [account, setAccount] = useState<AccountState>({ status: "loading" });
   const [retryCount, setRetryCount] = useState(0);
   const [failedImage, setFailedImage] = useState("");
+  const [logoSrc, setLogoSrc] = useState("/images/logo-m.png");
   const [signingOut, setSigningOut] = useState(false);
 
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -133,10 +134,55 @@ export default function SiteNavbar() {
     typeof photo === "string" &&
     /^https?:\/\//i.test(photo) &&
     photo !== failedImage;
+  function navigationLinks() {
+    return links.map(({ label, href }) => {
+      const active =
+        pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+
+      return (
+        <Link
+          key={href}
+          href={href}
+          onClick={closeMenus}
+          aria-current={pathname === href ? "page" : undefined}
+          className={`inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold whitespace-nowrap transition-colors hover:text-[var(--accent)] ${
+            active ? "text-[var(--accent)]" : "text-[var(--text)]"
+          }`}
+        >
+          {label}
+        </Link>
+      );
+    });
+  }
+
+  function guestLinks() {
+    return (
+      <>
+        <Link
+          href="/login"
+          onClick={closeMenus}
+          className="inline-flex min-h-11 items-center px-2 text-sm font-semibold hover:text-[var(--accent)]"
+        >
+          Login
+        </Link>
+        <Link
+          href="/register"
+          onClick={closeMenus}
+          className="inline-flex min-h-11 items-center rounded-full bg-[var(--text)] px-5 text-sm font-semibold text-[var(--page)]"
+        >
+          Register
+        </Link>
+      </>
+    );
+  }
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--page)]"
+      className={
+        pathname === "/"
+          ? "fixed inset-x-0 top-3 z-50 mx-auto w-[calc(100%_-_2rem)] max-w-7xl"
+          : "sticky top-3 z-50 mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-7xl"
+      }
       onKeyDown={(event) => {
         if (event.key !== "Escape") return;
 
@@ -153,78 +199,63 @@ export default function SiteNavbar() {
         <Toaster position="top-right" richColors />
       )}
 
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 px-4 py-3 sm:px-6">
-        <Link
-          href="/"
-          onClick={closeMenus}
-          aria-label="JUPITAR STUDIO home"
-          className="flex items-center gap-2"
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            className="h-7 w-7 text-[var(--accent)]"
+      <div
+        className="relative rounded-[1.75rem] border border-[color-mix(in_srgb,var(--border)_55%,transparent)] bg-[color-mix(in_srgb,var(--page)_84%,transparent)] px-2.5 py-2 text-[var(--text)] shadow-[0_8px_32px_rgb(0_0_0/0.14)] backdrop-blur-xl sm:px-4"
+      >
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          {/* Left: studio logo and name */}
+          <Link
+            href="/"
+            onClick={closeMenus}
+            aria-label="JUPITAR STUDIO home"
+            className="flex min-w-0 items-center gap-2 justify-self-start"
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m14.3 2.3 4.6 8M21.5 9h-9.2m7.2 9.6-4.6-8M9.7 21.7l-4.6-8M2.5 15h9.2m-7.2-9.6 4.6 8" />
-          </svg>
-          <span className="studio-heading whitespace-nowrap text-2xl">
-            JUPITAR STUDIO
-          </span>
-        </Link>
-
-        <button
-          ref={menuButton}
-          type="button"
-          aria-expanded={menuOpen}
-          aria-controls="navbar-menu"
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-            setAccountOpen(false);
-          }}
-          className={`${pillStyle} lg:hidden`}
-        >
-          {menuOpen ? "Close menu" : "Menu"}
-        </button>
-
-        <div
-          id="navbar-menu"
-          className={`${menuOpen ? "flex" : "hidden"} w-full flex-col gap-4 pt-4 lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-6 lg:pt-0`}
-        >
-          <nav
-            aria-label="Main navigation"
-            className="flex flex-col gap-1 lg:flex-row lg:gap-4"
-          >
-            {links.map(({ label, href }) => {
-              const active =
-                pathname === href ||
-                (href !== "/" && pathname.startsWith(`${href}/`));
-
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMenus}
-                  aria-current={pathname === href ? "page" : undefined}
-                  className={`py-2 text-sm font-semibold hover:underline ${
-                    active ? "text-[var(--accent)]" : "text-[var(--text)]"
-                  }`}
+            <span className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-full text-[var(--accent)]">
+              {logoSrc ? (
+                <Image
+                  src={logoSrc}
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="size-full object-contain"
+                  onError={() => setLogoSrc("")}
+                />
+              ) : (
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="size-8"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
                 >
-                  {label}
-                </Link>
-              );
-            })}
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m14.3 2.3 4.6 8M21.5 9h-9.2m7.2 9.6-4.6-8M9.7 21.7l-4.6-8M2.5 15h9.2m-7.2-9.6 4.6 8" />
+                </svg>
+              )}
+            </span>
+
+            <span className="studio-heading hidden whitespace-nowrap text-xl min-[390px]:inline sm:text-2xl">
+              JUPITAR STUDIO
+            </span>
+          </Link>
+
+          {/* Center: equal-width outer columns keep these links centered */}
+          <nav aria-label="Main navigation" className="hidden items-center lg:flex">
+            {navigationLinks()}
           </nav>
 
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Right: theme, account, and mobile navigation */}
+          <div className="flex items-center justify-self-end gap-1.5 sm:gap-2">
             <ThemeSwitch />
 
             {account.status === "loading" && (
-              <span role="status" className="text-sm text-[var(--muted)]">
-                Loading account…
+              <span
+                role="status"
+                className="grid size-11 place-items-center rounded-full border border-[var(--border)]"
+              >
+                <span className="sr-only">Loading account</span>
+                <span className="size-2 rounded-full bg-[var(--muted)] motion-safe:animate-pulse" />
               </span>
             )}
 
@@ -242,22 +273,9 @@ export default function SiteNavbar() {
             )}
 
             {account.status === "guest" && (
-              <>
-                <Link
-                  href="/login"
-                  onClick={closeMenus}
-                  className="py-2 text-sm font-semibold hover:underline"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={closeMenus}
-                  className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-semibold text-[var(--page)]"
-                >
-                  Register
-                </Link>
-              </>
+              <div className="hidden items-center gap-1 lg:flex">
+                {guestLinks()}
+              </div>
             )}
 
             {user && (
@@ -268,8 +286,11 @@ export default function SiteNavbar() {
                   aria-label={`Account menu for ${user.name}`}
                   aria-expanded={accountOpen}
                   aria-controls="account-dropdown"
-                  onClick={() => setAccountOpen(!accountOpen)}
-                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[var(--border)] bg-[var(--text)] font-semibold text-[var(--page)]"
+                  onClick={() => {
+                    setAccountOpen(!accountOpen);
+                    setMenuOpen(false);
+                  }}
+                  className="grid size-11 cursor-pointer place-items-center overflow-hidden rounded-full border border-[var(--border)] bg-[var(--text)] font-semibold text-[var(--page)] hover:ring-2 hover:ring-[var(--accent)]"
                 >
                   {showPhoto ? (
                     <Image
@@ -278,7 +299,7 @@ export default function SiteNavbar() {
                       width={44}
                       height={44}
                       unoptimized
-                      className="h-full w-full object-cover"
+                      className="size-full object-cover"
                       onError={() => setFailedImage(photo)}
                     />
                   ) : (
@@ -289,7 +310,7 @@ export default function SiteNavbar() {
                 <div
                   id="account-dropdown"
                   hidden={!accountOpen}
-                  className="absolute right-0 top-full z-50 mt-2 w-48 max-w-[90vw] rounded-xl border border-[var(--border)] bg-[var(--page)] p-2 shadow-lg"
+                  className="absolute top-full right-0 z-50 mt-3 w-52 max-w-[75vw] rounded-2xl border border-[var(--border)] bg-[var(--page)] p-2 shadow-xl"
                 >
                   <p className="break-words border-b border-[var(--border)] px-3 py-2 font-semibold">
                     {user.name}
@@ -300,7 +321,7 @@ export default function SiteNavbar() {
                       key={link.href}
                       href={link.href}
                       onClick={closeMenus}
-                      className="block rounded-lg px-3 py-2 text-sm hover:underline"
+                      className="block rounded-lg px-3 py-2.5 text-sm hover:text-[var(--accent)]"
                     >
                       {link.label}
                     </Link>
@@ -310,15 +331,58 @@ export default function SiteNavbar() {
                     type="button"
                     onClick={handleLogout}
                     disabled={signingOut}
-                    className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-[var(--accent)] disabled:opacity-70"
+                    className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-[var(--accent)] disabled:opacity-60"
                   >
                     {signingOut ? "Signing out…" : "Logout"}
                   </button>
                 </div>
               </div>
             )}
+
+            <button
+              ref={menuButton}
+              type="button"
+              aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={menuOpen}
+              aria-controls="navbar-menu"
+              onClick={() => {
+                setMenuOpen(!menuOpen);
+                setAccountOpen(false);
+              }}
+              className="grid size-11 cursor-pointer place-items-center rounded-full border border-[var(--border)] hover:text-[var(--accent)] lg:hidden"
+            >
+              <svg
+                aria-hidden="true"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              >
+                <path d={menuOpen ? "M6 6l12 12M18 6 6 18" : "M3 7h18M3 12h18M3 17h18"} />
+              </svg>
+            </button>
           </div>
         </div>
+
+        {menuOpen && (
+          <div
+            id="navbar-menu"
+            className="mt-2 max-h-[70dvh] overflow-y-auto border-t border-[var(--border)] pt-2 lg:hidden"
+          >
+            <nav aria-label="Mobile navigation" className="grid">
+              {navigationLinks()}
+            </nav>
+
+            {account.status === "guest" && (
+              <div className="mt-2 flex items-center gap-3 border-t border-[var(--border)] px-2 pt-3 pb-1">
+                {guestLinks()}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { A11y, Keyboard } from "swiper/modules";
+import { A11y, Autoplay, EffectFade, Keyboard } from "swiper/modules";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import "swiper/css";
+import "swiper/css/effect-fade";
 
 const slides = [
   {
@@ -34,121 +35,127 @@ const slides = [
   },
 ];
 
-type HeroImageProps = {
-  filename: string;
-  alt: string;
-};
+type StudioSlide = (typeof slides)[number];
 
-function HeroImage({ filename, alt }: HeroImageProps) {
-  const [imageMissing, setImageMissing] = useState(false);
+function HeroPanel({
+  slide,
+  index,
+  active,
+}: {
+  slide: StudioSlide;
+  index: number;
+  active: boolean;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <div className="relative isolate flex aspect-[16/10] items-center justify-center overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--page)] lg:aspect-auto lg:min-h-[28rem]">
-      {imageMissing ? (
-        <div className="px-5 text-center">
-          <p className="studio-heading text-3xl uppercase text-[var(--accent)]">
-            Image placeholder
-          </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">{filename}</p>
-        </div>
-      ) : (
+    <article
+      inert={!active}
+      className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-[#292320] text-[#fff7e5]"
+    >
+      {!imageFailed && (
         <Image
-          src={`/images/hero/${filename}`}
-          alt={alt}
+          src={`/images/hero/${slide.filename}`}
+          alt={slide.alt}
           fill
           unoptimized
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          className="object-cover"
-          onError={() => setImageMissing(true)}
+          sizes="100vw"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
+          className="absolute inset-0 -z-20 object-cover object-center"
+          onError={() => setImageFailed(true)}
         />
       )}
-    </div>
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(12,10,9,.88) 0%, rgba(12,10,9,.28) 58%, rgba(12,10,9,.16) 100%), linear-gradient(90deg, rgba(12,10,9,.56), transparent 80%)",
+        }}
+      />
+
+      <div className="mx-auto w-full max-w-7xl px-5 pt-32 pb-24 sm:px-8 sm:pb-28 lg:px-12">
+        <p className="text-sm font-semibold tracking-[0.16em] text-[#ff987c] uppercase">
+          {slide.category}
+        </p>
+
+        <h2 className="studio-heading mt-3 max-w-3xl text-6xl leading-[0.94] uppercase sm:text-7xl lg:text-8xl">
+          {slide.heading}
+        </h2>
+
+        <p className="mt-4 max-w-lg text-base leading-7 text-[#fff7e5] sm:text-lg">
+          {slide.description}
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/studios"
+            className="inline-flex min-h-11 items-center rounded-full bg-[#ff6845] px-6 py-3 font-semibold text-[#191919] hover:underline"
+          >
+            Explore Studios
+          </Link>
+
+          <Link
+            href="/studios"
+            className="inline-flex min-h-11 items-center rounded-full border border-[#fff7e5] bg-black/20 px-6 py-3 font-semibold text-[#fff7e5] hover:bg-black/40"
+          >
+            Host Your Space
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }
 
 function SliderControls({ activeIndex }: { activeIndex: number }) {
   const swiper = useSwiper();
-  const buttonStyle =
-    "flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] text-xl hover:border-[var(--accent)] focus-visible:outline-2 focus-visible:outline-[var(--accent)]";
+  const [paused, setPaused] = useState(false);
 
-  return (
-    <div className="mt-5 flex items-center justify-end gap-3">
-      <span className="mr-2 text-sm tabular-nums text-[var(--muted)]">
-        {activeIndex + 1} / {slides.length}
-      </span>
+  const control =
+    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/50 bg-black/35 px-3 text-sm font-semibold text-white hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-white";
 
-      <button
-        type="button"
-        aria-label="Previous studio slide"
-        className={buttonStyle}
-        onClick={() => swiper.slidePrev()}
-      >
-        ←
-      </button>
+  function toggleAutoplay() {
+    if (paused) {
+      swiper.autoplay.start();
+    } else {
+      swiper.autoplay.stop();
+    }
+    setPaused(!paused);
+  }
 
-      <button
-        type="button"
-        aria-label="Next studio slide"
-        className={buttonStyle}
-        onClick={() => swiper.slideNext()}
-      >
-        →
-      </button>
-    </div>
-  );
+
 }
 
 export default function HeroSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section
-      aria-label="Discover creative studios"
-      className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:py-12"
-    >
+    <section aria-label="Discover creative studios" className="w-full">
       <Swiper
-        modules={[A11y, Keyboard]}
+        className="relative w-full bg-[#292320]"
+        modules={[A11y, Autoplay, EffectFade, Keyboard]}
         slidesPerView={1}
-        spaceBetween={24}
-        rewind
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        speed={450}
+        loop
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+          waitForTransition: false,
+        }}
         keyboard={{ enabled: true, onlyInViewport: true }}
-        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
       >
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <SwiperSlide key={slide.filename}>
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-              <HeroImage filename={slide.filename} alt={slide.alt} />
-
-              <div className="flex flex-col items-start justify-center py-3 lg:py-10">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-                  {slide.category}
-                </p>
-
-                <h2 className="studio-heading mt-4 max-w-xl text-6xl leading-[0.95] uppercase sm:text-7xl xl:text-8xl">
-                  {slide.heading}
-                </h2>
-
-                <p className="mt-5 max-w-md leading-7 text-[var(--muted)]">
-                  {slide.description}
-                </p>
-
-                <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/studios"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff6845] px-6 py-3 font-semibold text-[#191919] hover:underline"
-                >
-                  Explore Studios
-                </Link>
-
-                <Link
-                  href="/studios"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-current px-6 py-3 font-semibold hover:underline"
-                >
-                  Host Your Space
-                </Link>
-              </div>
-              </div>
-            </div>
+            <HeroPanel
+              slide={slide}
+              index={index}
+              active={activeIndex === index}
+            />
           </SwiperSlide>
         ))}
 
