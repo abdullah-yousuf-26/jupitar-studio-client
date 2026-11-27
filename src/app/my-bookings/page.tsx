@@ -15,6 +15,7 @@ import {
 type Booking = {
   _id: string;
   studioTitle: string;
+  contactNumber?: string;
   start: string;
   end: string;
   total: number;
@@ -30,6 +31,22 @@ const badgeStyles = {
 
 const button =
   "inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--border)] px-4 font-semibold disabled:opacity-60";
+
+function formatBookingTime(value: string) {
+  const date = new Date(value);
+
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Dhaka",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    hour12: true,
+    // Preserve the exact time on older reservations made with the minute picker.
+    ...(date.getUTCMinutes() !== 0 ? { minute: "2-digit" as const } : {}),
+  }).format(date);
+}
+
 
 export default function MyBookingsPage() {
   const router = useRouter();
@@ -129,8 +146,17 @@ export default function MyBookingsPage() {
               </div>
 
               <p className="mt-3">
-                {new Date(row.start).toLocaleString()} – {new Date(row.end).toLocaleString()}
-              </p>
+  {formatBookingTime(row.start)} – {formatBookingTime(row.end)}
+</p>
+<p className="text-sm text-[var(--muted)]">Bangladesh time (GMT+6)</p>
+
+{row.contactNumber && (
+  <p className="mt-2">
+    Contact number: <span className="font-semibold">{row.contactNumber}</span>
+  </p>
+)}
+
+
               <p className="mt-1">Studio rental: ${row.total.toFixed(2)}</p>
 
               {row.status === "Pending" && (
