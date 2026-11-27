@@ -160,7 +160,6 @@ export default function HeroSlider() {
         ))}
 
         <div slot="container-end">
-          <SliderControls activeIndex={activeIndex} />
         </div>
       </Swiper>
     </section>
